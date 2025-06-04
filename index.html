@@ -154,6 +154,8 @@
             border-radius: 50%;
             transform: rotate(-30deg);
         }
+
+        /* Logo styling */
         .header-logo {
             max-width: 150px; /* Adjust as needed */
             height: auto;
@@ -284,7 +286,46 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        .product a.btn {
+        /* Quantity selector styling */
+        .quantity-selector {
+            margin: 15px 0;
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .quantity-selector.show {
+            display: flex; /* Show when 'show' class is added */
+            opacity: 1;
+        }
+
+        .quantity-selector label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .quantity-selector input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            -moz-appearance: textfield; /* Firefox */
+        }
+
+        /* Hide spin buttons for Chrome, Safari, Edge, Opera */
+        .quantity-selector input[type="number"]::-webkit-outer-spin-button,
+        .quantity-selector input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .product .btn {
             margin-top: auto; /* Pushes the button to the bottom */
             width: fit-content;
             align-self: center; /* Centers the button */
@@ -337,6 +378,41 @@
         footer p {
             margin: 5px 0;
         }
+
+        /* Custom Message Box Styles */
+        #custom-message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 2px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 2000;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            max-width: 90%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #custom-message-box button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        #custom-message-box button:hover {
+            background-color: #c9184a;
+        }
+
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -467,13 +543,15 @@
     <!-- Main Content Wrapper -->
     <div id="main-content-wrapper">
         <header>
-            <img src="logo.png" alt="Pickle Paradise Logo" class="header-logo">
+            <!-- Business Logo -->
+            <!-- IMPORTANT: Replace 'logo.png' with the actual path to your logo file -->
+            <img src="logo.png" onerror="this.onerror=null;this.src='https://placehold.co/150x80/e63946/ffffff?text=Your+Logo';" alt="Pickle Paradise Logo" class="header-logo">
             <h1>Pickle Paradise</h1>
             <p>Taste of India, Delivered Worldwide</p>
-            <a href="#products" class="btn">Explore Pickles</a>
+            <a href="#veg-pickles" class="btn">Explore Pickles</a>
         </header>
 
-        <section id="veg-pickles"> <!-- Changed ID for direct link -->
+        <section id="veg-pickles">
             <h1>Our Pickles</h1>
             <h3>Veg Pickles</h3>
             <div class="product-grid">
@@ -481,66 +559,156 @@
                     <img src="avakaya.jpg" alt="Avakaya Pickle">
                     <h3>Avakaya (Mango Pickle)</h3>
                     <p class="price">₹390 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Avakaya%20(Mango%20Pickle)">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="avakaya-qty">Quantity (kg):</label>
+                        <input type="number" id="avakaya-qty" name="avakaya-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Avakaya (Mango Pickle)"
+                            data-price-per-kg="390"
+                            data-quantity-input-id="avakaya-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
                 <div class="product">
                     <img src="gongura.jpg" alt="Gongura Pickle">
                     <h3>Gongura Pickle</h3>
                     <p class="price">₹370 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Gongura%20Pickle">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="gongura-qty">Quantity (kg):</label>
+                        <input type="number" id="gongura-qty" name="gongura-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Gongura Pickle"
+                            data-price-per-kg="370"
+                            data-quantity-input-id="gongura-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
                 <div class="product">
                     <img src="tomato.jpg" alt="Tomato Pickle">
                     <h3>Tomato Pickle</h3>
                     <p class="price">₹340 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Tomato%20Pickle">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="tomato-qty">Quantity (kg):</label>
+                        <input type="number" id="tomato-qty" name="tomato-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Tomato Pickle"
+                            data-price-per-kg="340"
+                            data-quantity-input-id="tomato-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
                 <div class="product">
                     <img src="ginger.jpg" alt="Ginger Pickle">
                     <h3>Allam Pachadi (Ginger)</h3>
                     <p class="price">₹630 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Ginger%20Pickle">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="ginger-qty">Quantity (kg):</label>
+                        <input type="number" id="ginger-qty" name="ginger-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Allam Pachadi (Ginger)"
+                            data-price-per-kg="630"
+                            data-quantity-input-id="ginger-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
                 <div class="product">
-                    <img src="ginger.jpg" alt="Lemon Pickle">
+                    <img src="lemon.jpg" alt="Lemon Pickle">
                     <h3>Nimbu Achar (Lemon Pickle)</h3>
                     <p class="price">₹300 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Lemon%20Pickle">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="lemon-qty">Quantity (kg):</label>
+                        <input type="number" id="lemon-qty" name="lemon-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Nimbu Achar (Lemon Pickle)"
+                            data-price-per-kg="300"
+                            data-quantity-input-id="lemon-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
             </div>
         </section>
-        <section id="non-veg-pickles"> <!-- Changed ID for direct link -->
+        <section id="non-veg-pickles">
             <h3>Non-Veg Pickles</h3>
             <div class="product-grid">
                 <div class="product">
                     <img src="chicken.jpg" alt="Chicken Pickle">
                     <h3>Chicken Pickle</h3>
                     <p class="price">₹1200 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Chicken%20Pickle">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="chicken-qty">Quantity (kg):</label>
+                        <input type="number" id="chicken-qty" name="chicken-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Chicken Pickle"
+                            data-price-per-kg="1200"
+                            data-quantity-input-id="chicken-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
                 <div class="product">
                     <img src="prawn.jpg" alt="Prawn Pickle">
                     <h3>Prawn Pickle (Royyala)</h3>
                     <p class="price">₹1500 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Prawn%20Pickle">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="prawn-qty">Quantity (kg):</label>
+                        <input type="number" id="prawn-qty" name="prawn-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Prawn Pickle (Royyala)"
+                            data-price-per-kg="1500"
+                            data-quantity-input-id="prawn-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
                 <div class="product">
                     <img src="mutton.jpg" alt="Mutton Pickle">
                     <h3>Mutton Pickle</h3>
                     <p class="price">₹1850 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Mutton%20Pickle">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="mutton-qty">Quantity (kg):</label>
+                        <input type="number" id="mutton-qty" name="mutton-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Mutton Pickle"
+                            data-price-per-kg="1850"
+                            data-quantity-input-id="mutton-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
                 <div class="product">
                     <img src="fish.jpg" alt="Fish Pickle">
                     <h3>Fish Pickle (Chepa Pachadi)</h3>
                     <p class="price">₹1200 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Fish%20Pickle">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="fish-qty">Quantity (kg):</label>
+                        <input type="number" id="fish-qty" name="fish-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Fish Pickle (Chepa Pachadi)"
+                            data-price-per-kg="1200"
+                            data-quantity-input-id="fish-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
                 <div class="product">
                     <img src="gongura-chicken.jpg" alt="Gongura Chicken Pickle">
                     <h3>Gongura Chicken Pickle</h3>
                     <p class="price">₹1500 / 1kg</p>
-                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Gongura%20Chicken%20Pickle">Order Now</a>
+                    <div class="quantity-selector">
+                        <label for="gongura-chicken-qty">Quantity (kg):</label>
+                        <input type="number" id="gongura-chicken-qty" name="gongura-chicken-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn order-btn"
+                            data-product-name="Gongura Chicken Pickle"
+                            data-price-per-kg="1500"
+                            data-quantity-input-id="gongura-chicken-qty"
+                            data-state="initial"
+                            onclick="handleOrderClick(this)">Order Now</button>
                 </div>
             </div>
         </section>
@@ -556,7 +724,12 @@
         </footer>
     </div> <!-- End of main-content-wrapper -->
 
+    <!-- Custom Message Box HTML -->
+    <div id="custom-message-box"></div>
+
     <script>
+        let activeOrderButton = null; // To keep track of the currently active order button
+
         // Function to toggle the sidebar
         function toggleSidebar() {
             document.body.classList.toggle('sidebar-open');
@@ -592,6 +765,68 @@
                 closeSidebar();
             }
         });
+
+        // Function to handle the two-step order process
+        function handleOrderClick(button) {
+            const productName = button.dataset.productName;
+            const pricePerKg = parseFloat(button.dataset.pricePerKg);
+            const quantityInputId = button.dataset.quantityInputId;
+            const quantitySelector = document.getElementById(quantityInputId).closest('.quantity-selector');
+            const quantityInput = document.getElementById(quantityInputId);
+
+            // If a different product's quantity selector is active, revert it
+            if (activeOrderButton && activeOrderButton !== button) {
+                const prevQuantitySelector = document.getElementById(activeOrderButton.dataset.quantityInputId).closest('.quantity-selector');
+                prevQuantitySelector.classList.remove('show');
+                activeOrderButton.textContent = 'Order Now';
+                activeOrderButton.dataset.state = 'initial';
+            }
+
+            if (button.dataset.state === 'initial') {
+                // First click: Show quantity selector
+                quantitySelector.classList.add('show');
+                button.textContent = 'Confirm Order';
+                button.dataset.state = 'confirm';
+                activeOrderButton = button; // Set this button as the active one
+            } else {
+                // Second click: Confirm order
+                let quantity = parseInt(quantityInput.value);
+
+                if (isNaN(quantity) || quantity < 1 || quantity > 10) {
+                    showCustomMessage("Please enter a quantity between 1kg and 10kg for " + productName + ".");
+                    return; // Stop execution if validation fails
+                }
+
+                const totalAmount = quantity * pricePerKg;
+                const message = `I'm interested in ordering ${quantity}kg of ${productName}. The total estimated price is ₹${totalAmount}.`;
+                const whatsappUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+
+                // Reset button and hide quantity selector after successful order
+                quantitySelector.classList.remove('show');
+                button.textContent = 'Order Now';
+                button.dataset.state = 'initial';
+                activeOrderButton = null; // No active button after order
+            }
+        }
+
+        // Custom message box implementation (since alert() is disallowed)
+        function showCustomMessage(message) {
+            let messageBox = document.getElementById('custom-message-box');
+            if (!messageBox) {
+                messageBox = document.createElement('div');
+                messageBox.id = 'custom-message-box';
+                document.body.appendChild(messageBox);
+            }
+            messageBox.innerHTML = `
+                <p>${message}</p>
+                <button onclick="document.getElementById('custom-message-box').style.opacity = '0'; document.getElementById('custom-message-box').style.visibility = 'hidden';">
+                    OK
+                </button>
+            `;
+            messageBox.style.opacity = '1';
+            messageBox.style.visibility = 'visible';
+        }
     </script>
 </body>
 </html>
