@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Pickle Paradise</title>
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for hamburger icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e63946; /* Red for header, accents */
+            --secondary-color: #f1c40f; /* Yellow for buttons, highlights */
+            --background-light: #fffaf0; /* Light cream background */
+            --text-dark: #333;
+            --text-light: #fff;
+            --card-background: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0,0,0,0.15);
+            --sidebar-width: 250px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll during sidebar transition */
+        }
+
+        /* Main container for content, shifted when sidebar is open */
+        #main-content-wrapper {
+            transition: margin-left 0.3s ease;
+            margin-left: 0;
+        }
+
+        /* Styles for when the sidebar is open on larger screens */
+        @media (min-width: 481px) {
+            body.sidebar-open #main-content-wrapper {
+                margin-left: var(--sidebar-width);
+            }
+        }
+
+
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 0; /* Initially closed */
+            position: fixed;
+            z-index: 1000; /* Ensure it's on top */
+            top: 0;
+            left: 0;
+            background-color: #333; /* Dark background for contrast */
+            overflow-x: hidden;
+            transition: 0.3s ease;
+            padding-top: 60px; /* Space for content below toggle */
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Styles for when the sidebar is open */
+        body.sidebar-open .sidebar {
+            width: var(--sidebar-width);
+        }
+
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 1.2em;
+            color: var(--text-light);
+            display: block;
+            transition: 0.3s ease;
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar a:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar a:hover {
+            color: var(--secondary-color);
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        /* Sidebar toggle button */
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            color: var(--primary-color); /* Matches header color */
+            background-color: var(--card-background);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            z-index: 1001; /* Above sidebar */
+            transition: left 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Move toggle button when sidebar is open on larger screens */
+        @media (min-width: 481px) {
+            body.sidebar-open .sidebar-toggle {
+                left: calc(var(--sidebar-width) + 20px);
+                transform: rotate(90deg); /* Rotate icon */
+            }
+        }
+
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #c9184a 100%);
+            color: var(--text-light);
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            transform: rotate(-30deg);
+        }
+
+
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            margin: 10px 0 25px;
+            font-size: 1.2em;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--secondary-color) 0%, #ffc107 100%);
+            color: var(--text-dark);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4);
+            display: inline-block; /* Ensures padding and margin work correctly */
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(241, 196, 15, 0.6);
+            background: linear-gradient(45deg, #ffc107 0%, var(--secondary-color) 100%);
+        }
+
+        section {
+            padding: 60px 20px;
+            max-width: 1000px;
+            margin: auto;
+            text-align: center;
+        }
+
+        section h1 {
+            font-size: 2.8em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        section h1::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        section h3 {
+            font-size: 1.8em;
+            color: var(--text-dark);
+            margin-top: 40px;
+            margin-bottom: 30px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .product {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        .product h3 {
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .product .price {
+            font-weight: 700;
+            font-size: 1.3em;
+            color: #28a745; /* Green for price */
+            margin: 15px 0;
+        }
+
+        .product img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .product a.btn {
+            margin-top: auto; /* Pushes the button to the bottom */
+            width: fit-content;
+            align-self: center; /* Centers the button */
+        }
+
+        .about {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+
+        .about h2 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .about p {
+            font-size: 1.1em;
+            color: #555;
+            text-align: justify;
+        }
+
+        footer {
+            background-color: #333;
+            color: var(--text-light);
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 0.95em;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+        }
+
+        footer a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.8em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            section h1 {
+                font-size: 2.2em;
+            }
+            section h3 {
+                font-size: 1.5em;
+            }
+            .product {
+                padding: 20px;
+            }
+            .product h3 {
+                font-size: 1.3em;
+            }
+            .product .price {
+                font-size: 1.1em;
+            }
+            .btn {
+                padding: 10px 25px;
+                font-size: 1em;
+            }
+            .about {
+                padding: 30px;
+            }
+            .about h2 {
+                font-size: 2em;
+            }
+            .about p {
+                font-size: 1em;
+            }
+
+            /* Adjust sidebar toggle for smaller screens */
+            .sidebar-toggle {
+                left: 10px; /* Keep button on left */
+                top: 10px;
+                font-size: 1.5em;
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 2em;
+            }
+            header p {
+                font-size: 0.9em;
+            }
+            .btn {
+                padding: 8px 20px;
+                font-size: 0.9em;
+            }
+            section {
+                padding: 40px 15px;
+            }
+            section h1 {
+                font-size: 1.8em;
+            }
+            section h3 {
+                font-size: 1.3em;
+            }
+            .product-grid {
+                grid-template-columns: 1fr; /* Single column on very small screens */
+            }
+            .product {
+                padding: 15px;
+            }
+            .product h3 {
+                font-size: 1.2em;
+            }
+            .product .price {
+                font-size: 1em;
+            }
+            .about {
+                padding: 20px;
+            }
+            footer {
+                font-size: 0.85em;
+            }
+
+            /* Sidebar overlay for very small screens */
+            .sidebar {
+                width: 0; /* Initially closed */
+            }
+            body.sidebar-open .sidebar {
+                width: 100%; /* Full width overlay */
+                background-color: rgba(0,0,0,0.9); /* Darker overlay */
+            }
+            body.sidebar-open #main-content-wrapper {
+                margin-left: 0; /* No margin shift, just overlay */
+            }
+            .sidebar-toggle {
+                left: 10px; /* Stays fixed on left */
+                transform: rotate(0deg); /* No rotation for overlay */
+                color: var(--secondary-color); /* Change color to stand out on dark overlay */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="mySidebar">
+        <a href="#veg-pickles" onclick="closeSidebar()">Veg Pickles</a>
+        <a href="#non-veg-pickles" onclick="closeSidebar()">Non-Veg Pickles</a>
+    </div>
+
+    <!-- Toggle Button for Sidebar -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content Wrapper -->
+    <div id="main-content-wrapper">
+        <header>
+            <h1>Pickle Paradise</h1>
+            <p>Taste of India, Delivered Worldwide</p>
+            <a href="#products" class="btn">Explore Pickles</a>
+        </header>
+
+        <section id="veg-pickles"> <!-- Changed ID for direct link -->
+            <h1>Our Pickles</h1>
+            <h3>Veg Pickles</h3>
+            <div class="product-grid">
+                <div class="product">
+                    <img src="avakaya.jpg" alt="Avakaya Pickle">
+                    <h3>Avakaya (Mango Pickle)</h3>
+                    <p class="price">₹390 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Avakaya%20(Mango%20Pickle)">Order Now</a>
+                </div>
+                <div class="product">
+                    <img src="gongura.jpg" alt="Gongura Pickle">
+                    <h3>Gongura Pickle</h3>
+                    <p class="price">₹370 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Gongura%20Pickle">Order Now</a>
+                </div>
+                <div class="product">
+                    <img src="tomato.jpg" alt="Tomato Pickle">
+                    <h3>Tomato Pickle</h3>
+                    <p class="price">₹340 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Tomato%20Pickle">Order Now</a>
+                </div>
+                <div class="product">
+                    <img src="ginger.jpg" alt="Ginger Pickle">
+                    <h3>Allam Pachadi (Ginger)</h3>
+                    <p class="price">₹630 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Ginger%20Pickle">Order Now</a>
+                </div>
+                <div class="product">
+                    <img src="ginger.jpg" alt="Lemon Pickle">
+                    <h3>Nimbu Achar (Lemon Pickle)</h3>
+                    <p class="price">₹300 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Lemon%20Pickle">Order Now</a>
+                </div>
+            </div>
+        </section>
+        <section id="non-veg-pickles"> <!-- Changed ID for direct link -->
+            <h3>Non-Veg Pickles</h3>
+            <div class="product-grid">
+                <div class="product">
+                    <img src="chicken.jpg" alt="Chicken Pickle">
+                    <h3>Chicken Pickle</h3>
+                    <p class="price">₹1200 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Chicken%20Pickle">Order Now</a>
+                </div>
+                <div class="product">
+                    <img src="prawn.jpg" alt="Prawn Pickle">
+                    <h3>Prawn Pickle (Royyala)</h3>
+                    <p class="price">₹1500 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Prawn%20Pickle">Order Now</a>
+                </div>
+                <div class="product">
+                    <img src="mutton.jpg" alt="Mutton Pickle">
+                    <h3>Mutton Pickle</h3>
+                    <p class="price">₹1850 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Mutton%20Pickle">Order Now</a>
+                </div>
+                <div class="product">
+                    <img src="fish.jpg" alt="Fish Pickle">
+                    <h3>Fish Pickle (Chepa Pachadi)</h3>
+                    <p class="price">₹1200 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Fish%20Pickle">Order Now</a>
+                </div>
+                <div class="product">
+                    <img src="gongura-chicken.jpg" alt="Gongura Chicken Pickle">
+                    <h3>Gongura Chicken Pickle</h3>
+                    <p class="price">₹1500 / 1kg</p>
+                    <a class="btn" href="https://wa.me/917801035193?text=I'm%20interested%20in%20Gongura%20Chicken%20Pickle">Order Now</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="about">
+            <h2>About Us</h2>
+            <p>At <strong>Pickle Paradise</strong>, we bring the traditional taste of Andhra kitchen to every corner of the world. Our homemade pickles are prepared using authentic recipes, premium ingredients, and a pinch of love. Whether you’re in the US, UK, or UAE — enjoy the flavors of home, delivered to your door.</p>
+        </section>
+
+        <footer>
+            <p>📞 <a href="https://wa.me/917801035193">+91 7801035193</a> | 📧 <a href="mailto:shanmukhchowdary63@gmail.com">shanmukhchowdary63@gmail.com</a></p>
+            <p>Shipping included | All rights reserved © Pickle Paradise</p>
+        </footer>
+    </div> <!-- End of main-content-wrapper -->
+
+    <script>
+        // Function to toggle the sidebar
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        // Function to close the sidebar (e.g., when a link is clicked)
+        function closeSidebar() {
+            document.body.classList.remove('sidebar-open');
+        }
+
+        // Close sidebar if user clicks outside of it (on larger screens)
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('mySidebar');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            const isClickInsideSidebar = sidebar.contains(event.target);
+            const isClickOnToggle = toggleBtn.contains(event.target);
+
+            // Only close if sidebar is open, and click is not inside sidebar or on toggle button
+            // This condition ensures it only applies to non-overlay behavior (larger screens)
+            if (document.body.classList.contains('sidebar-open') && !isClickInsideSidebar && !isClickOnToggle) {
+                if (window.innerWidth > 480) { // Only close on outside click if not in overlay mode
+                    closeSidebar();
+                }
+            }
+        });
+
+        // Optional: Close sidebar if window is resized from small to large while sidebar is open
+        // This prevents the sidebar from being stuck open if resized from overlay mode.
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 480 && document.body.classList.contains('sidebar-open')) {
+                // If it's a larger screen and sidebar is open (potentially from mobile overlay), close it
+                // This ensures correct behavior when transitioning from mobile to desktop view
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>
