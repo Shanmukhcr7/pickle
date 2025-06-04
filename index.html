@@ -154,6 +154,15 @@
             border-radius: 50%;
             transform: rotate(-30deg);
         }
+        .header-logo {
+            max-width: 150px; /* Adjust as needed */
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 10px; /* Slightly rounded corners for the logo */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            background-color: rgba(255,255,255,0.9); /* Slight background for visibility */
+            padding: 5px;
+        }
 
 
         header h1 {
@@ -374,6 +383,10 @@
                 width: 40px;
                 height: 40px;
             }
+            .header-logo {
+                max-width: 120px; /* Smaller logo on smaller screens */
+                margin-bottom: 15px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -431,6 +444,10 @@
                 transform: rotate(0deg); /* No rotation for overlay */
                 color: var(--secondary-color); /* Change color to stand out on dark overlay */
             }
+            .header-logo {
+                max-width: 100px; /* Even smaller logo on extra small screens */
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -450,6 +467,7 @@
     <!-- Main Content Wrapper -->
     <div id="main-content-wrapper">
         <header>
+            <img src="logo.png" alt="Pickle Paradise Logo" class="header-logo">
             <h1>Pickle Paradise</h1>
             <p>Taste of India, Delivered Worldwide</p>
             <a href="#products" class="btn">Explore Pickles</a>
