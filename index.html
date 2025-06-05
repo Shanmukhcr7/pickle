@@ -6,7 +6,7 @@
     <title>Pickle Paradise</title>
     <!-- Google Font: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for hamburger icon -->
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
@@ -31,19 +31,18 @@
             overflow-x: hidden; /* Prevent horizontal scroll during sidebar transition */
         }
 
-        /* Main container for content, shifted when sidebar is open */
+        /* Main content wrapper with transition for sidebar */
         #main-content-wrapper {
             transition: margin-left 0.3s ease;
             margin-left: 0;
         }
 
-        /* Styles for when the sidebar is open on larger screens */
+        /* Shift content when sidebar is open on larger screens */
         @media (min-width: 481px) {
             body.sidebar-open #main-content-wrapper {
                 margin-left: var(--sidebar-width);
             }
         }
-
 
         /* Sidebar styles */
         .sidebar {
@@ -63,7 +62,7 @@
             align-items: center;
         }
 
-        /* Styles for when the sidebar is open */
+        /* Open sidebar style */
         body.sidebar-open .sidebar {
             width: var(--sidebar-width);
         }
@@ -89,14 +88,14 @@
             background-color: rgba(255,255,255,0.1);
         }
 
-        /* Sidebar toggle button */
+        /* Sidebar toggle button (hamburger) */
         .sidebar-toggle {
             position: fixed;
             top: 20px;
             left: 20px;
             font-size: 2em;
             cursor: pointer;
-            color: var(--primary-color); /* Matches header color */
+            color: var(--primary-color);
             background-color: var(--card-background);
             border: none;
             border-radius: 50%;
@@ -106,7 +105,7 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 10px var(--shadow-color);
-            z-index: 1001; /* Above sidebar */
+            z-index: 1001;
             transition: left 0.3s ease, transform 0.3s ease;
         }
 
@@ -114,10 +113,9 @@
         @media (min-width: 481px) {
             body.sidebar-open .sidebar-toggle {
                 left: calc(var(--sidebar-width) + 20px);
-                transform: rotate(90deg); /* Rotate icon */
+                transform: rotate(90deg);
             }
         }
-
 
         header {
             background: linear-gradient(135deg, var(--primary-color) 0%, #c9184a 100%);
@@ -129,6 +127,10 @@
             overflow: hidden;
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
+            display: flex; /* Use flexbox for header content alignment */
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center horizontally */
+            justify-content: center;
         }
 
         header::before {
@@ -157,15 +159,14 @@
 
         /* Logo styling */
         .header-logo {
-            max-width: 150px; /* Adjust as needed */
+            max-width: 150px;
             height: auto;
             margin-bottom: 20px;
-            border-radius: 10px; /* Slightly rounded corners for the logo */
+            border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            background-color: rgba(255,255,255,0.9); /* Slight background for visibility */
+            background-color: rgba(255,255,255,0.9);
             padding: 5px;
         }
-
 
         header h1 {
             margin: 0;
@@ -182,6 +183,36 @@
             opacity: 0.9;
         }
 
+        /* Cart icon in header */
+        .cart-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            color: var(--text-light);
+            cursor: pointer;
+            z-index: 1001;
+            transition: transform 0.2s ease;
+        }
+
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--secondary-color);
+            color: var(--text-dark);
+            font-size: 0.6em;
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 4px 8px;
+            min-width: 20px;
+            text-align: center;
+        }
+
         .btn {
             background: linear-gradient(45deg, var(--secondary-color) 0%, #ffc107 100%);
             color: var(--text-dark);
@@ -194,13 +225,47 @@
             font-size: 1.1em;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4);
-            display: inline-block; /* Ensures padding and margin work correctly */
+            display: inline-block;
         }
 
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(241, 196, 15, 0.6);
             background: linear-gradient(45deg, #ffc107 0%, var(--secondary-color) 100%);
+        }
+
+        /* Search bar styling */
+        .search-bar {
+            width: 100%; /* Take full width of header padding */
+            max-width: 500px; /* Limit max width for desktop */
+            margin-top: 20px; /* Space from buttons/slogan */
+            position: relative; /* For positioning results dropdown */
+        }
+
+        .search-bar input[type="text"] {
+            width: calc(100% - 40px); /* Account for padding */
+            padding: 12px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            font-size: 1em;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: rgba(255,255,255,0.9); /* Slightly opaque for visibility in header */
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+        }
+
+        /* No results message */
+        #no-results-message {
+            text-align: center;
+            color: #777;
+            font-size: 1.2em;
+            margin-top: 30px;
+            display: none; /* Hidden by default */
         }
 
         section {
@@ -252,7 +317,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
+            display: flex; /* Always display flex by default */
             flex-direction: column;
             justify-content: space-between;
         }
@@ -273,7 +338,7 @@
         .product .price {
             font-weight: 700;
             font-size: 1.3em;
-            color: #28a745; /* Green for price */
+            color: #28a745;
             margin: 15px 0;
         }
 
@@ -315,7 +380,7 @@
             text-align: center;
             font-size: 1em;
             font-family: 'Inter', sans-serif;
-            -moz-appearance: textfield; /* Firefox */
+            -moz-appearance: textfield;
         }
 
         /* Hide spin buttons for Chrome, Safari, Edge, Opera */
@@ -326,9 +391,9 @@
         }
 
         .product .btn {
-            margin-top: auto; /* Pushes the button to the bottom */
+            margin-top: auto;
             width: fit-content;
-            align-self: center; /* Centers the button */
+            align-self: center;
         }
 
         .about {
@@ -379,6 +444,18 @@
             margin: 5px 0;
         }
 
+        /* Custom Message Box & Cart Modal Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1999;
+            display: none;
+        }
+
         /* Custom Message Box Styles */
         #custom-message-box {
             position: fixed;
@@ -395,9 +472,7 @@
             font-family: 'Inter', sans-serif;
             color: var(--text-dark);
             max-width: 90%;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            display: none;
         }
         #custom-message-box button {
             background-color: var(--primary-color);
@@ -411,6 +486,144 @@
         }
         #custom-message-box button:hover {
             background-color: #c9184a;
+        }
+
+        /* Cart Modal Styles */
+        #cart-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--card-background);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            z-index: 2000;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        #cart-modal h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #cart-items-container {
+            width: 100%;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border-color);
+            gap: 10px;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .cart-item-info h4 {
+            margin: 0;
+            color: var(--text-dark);
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .cart-item-info p {
+            margin: 5px 0 0;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-item-qty input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .cart-item-qty-btn {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 5px;
+            width: 25px;
+            height: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .cart-item-qty-btn:hover {
+            background-color: #c9184a;
+        }
+
+        .cart-item-price {
+            font-weight: bold;
+            color: #28a745;
+            width: 90px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .remove-item-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            margin-left: 10px;
+        }
+
+        .remove-item-btn:hover {
+            color: #c9184a;
+        }
+
+        #cart-total {
+            width: 100%;
+            text-align: right;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid var(--secondary-color);
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+        .cart-actions .btn {
+            padding: 10px 20px;
+            font-size: 1em;
         }
 
 
@@ -453,15 +666,54 @@
 
             /* Adjust sidebar toggle for smaller screens */
             .sidebar-toggle {
-                left: 10px; /* Keep button on left */
+                left: 10px;
                 top: 10px;
                 font-size: 1.5em;
                 width: 40px;
                 height: 40px;
             }
             .header-logo {
-                max-width: 120px; /* Smaller logo on smaller screens */
+                max-width: 120px;
                 margin-bottom: 15px;
+            }
+            .cart-icon {
+                top: 10px;
+                right: 10px;
+                font-size: 1.5em;
+            }
+            .cart-count {
+                top: -5px;
+                right: -5px;
+                padding: 3px 6px;
+                min-width: 15px;
+            }
+            #cart-modal {
+                width: 95%;
+                padding: 20px;
+            }
+            .cart-item {
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+            }
+            .cart-item-info, .cart-item-qty, .cart-item-price {
+                flex-basis: 100%;
+                text-align: center;
+            }
+            .cart-item-price {
+                margin-top: 5px;
+            }
+            .remove-item-btn {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+            .search-bar {
+                margin-top: 15px;
+                padding: 0 10px;
+            }
+            .search-bar input[type="text"] {
+                width: calc(100% - 20px);
+                padding: 10px;
             }
         }
 
@@ -486,7 +738,7 @@
                 font-size: 1.3em;
             }
             .product-grid {
-                grid-template-columns: 1fr; /* Single column on very small screens */
+                grid-template-columns: 1fr;
             }
             .product {
                 padding: 15px;
@@ -506,23 +758,26 @@
 
             /* Sidebar overlay for very small screens */
             .sidebar {
-                width: 0; /* Initially closed */
+                width: 0;
             }
             body.sidebar-open .sidebar {
-                width: 100%; /* Full width overlay */
-                background-color: rgba(0,0,0,0.9); /* Darker overlay */
+                width: 100%;
+                background-color: rgba(0,0,0,0.9);
             }
             body.sidebar-open #main-content-wrapper {
-                margin-left: 0; /* No margin shift, just overlay */
+                margin-left: 0;
             }
             .sidebar-toggle {
-                left: 10px; /* Stays fixed on left */
-                transform: rotate(0deg); /* No rotation for overlay */
-                color: var(--secondary-color); /* Change color to stand out on dark overlay */
+                left: 10px;
+                transform: rotate(0deg);
+                color: var(--secondary-color);
             }
             .header-logo {
-                max-width: 100px; /* Even smaller logo on extra small screens */
+                max-width: 100px;
                 margin-bottom: 10px;
+            }
+            .cart-item-qty input {
+                width: 50px;
             }
         }
     </style>
@@ -544,171 +799,186 @@
     <div id="main-content-wrapper">
         <header>
             <!-- Business Logo -->
-            <!-- IMPORTANT: Replace 'logo.png' with the actual path to your logo file -->
             <img src="logo.png" onerror="this.onerror=null;this.src='https://placehold.co/150x80/e63946/ffffff?text=Your+Logo';" alt="Pickle Paradise Logo" class="header-logo">
             <h1>Pickle Paradise</h1>
             <p>Taste of India, Delivered Worldwide</p>
             <a href="#veg-pickles" class="btn">Explore Pickles</a>
+
+            <!-- Cart Icon -->
+            <div class="cart-icon" onclick="openCartModal()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cart-item-count">0</span>
+            </div>
+
+            <!-- Search Bar - Now inside the header -->
+            <div class="search-bar">
+                <input type="text" id="product-search" placeholder="Search by name or price (e.g., 'mango', '390')" onkeyup="filterProducts()">
+            </div>
         </header>
+
+        <!-- No Results Message -->
+        <div id="no-results-message">
+            <p>No pickles found matching your search. Try a different keyword!</p>
+        </div>
 
         <section id="veg-pickles">
             <h1>Our Pickles</h1>
             <h3>Veg Pickles</h3>
             <div class="product-grid">
-                <div class="product">
+                <div class="product" data-product-id="avakaya-mango-pickle">
                     <img src="avakaya.jpg" alt="Avakaya Pickle">
                     <h3>Avakaya (Mango Pickle)</h3>
-                    <p class="price">₹390 / 1kg</p>
+                    <p class="price" data-base-price="390">₹390 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="avakaya-qty">Quantity (kg):</label>
                         <input type="number" id="avakaya-qty" name="avakaya-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Avakaya (Mango Pickle)"
                             data-price-per-kg="390"
                             data-quantity-input-id="avakaya-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
-                <div class="product">
+                <div class="product" data-product-id="gongura-pickle">
                     <img src="gongura.jpg" alt="Gongura Pickle">
                     <h3>Gongura Pickle</h3>
-                    <p class="price">₹370 / 1kg</p>
+                    <p class="price" data-base-price="370">₹370 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="gongura-qty">Quantity (kg):</label>
                         <input type="number" id="gongura-qty" name="gongura-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Gongura Pickle"
                             data-price-per-kg="370"
                             data-quantity-input-id="gongura-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
-                <div class="product">
+                <div class="product" data-product-id="tomato-pickle">
                     <img src="tomato.jpg" alt="Tomato Pickle">
                     <h3>Tomato Pickle</h3>
-                    <p class="price">₹340 / 1kg</p>
+                    <p class="price" data-base-price="340">₹340 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="tomato-qty">Quantity (kg):</label>
                         <input type="number" id="tomato-qty" name="tomato-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Tomato Pickle"
                             data-price-per-kg="340"
                             data-quantity-input-id="tomato-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
-                <div class="product">
+                <div class="product" data-product-id="allam-pachadi-ginger">
                     <img src="ginger.jpg" alt="Ginger Pickle">
                     <h3>Allam Pachadi (Ginger)</h3>
-                    <p class="price">₹630 / 1kg</p>
+                    <p class="price" data-base-price="630">₹630 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="ginger-qty">Quantity (kg):</label>
                         <input type="number" id="ginger-qty" name="ginger-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Allam Pachadi (Ginger)"
                             data-price-per-kg="630"
                             data-quantity-input-id="ginger-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
-                <div class="product">
+                <div class="product" data-product-id="nimbu-achar-lemon-pickle">
                     <img src="lemon.jpg" alt="Lemon Pickle">
                     <h3>Nimbu Achar (Lemon Pickle)</h3>
-                    <p class="price">₹300 / 1kg</p>
+                    <p class="price" data-base-price="300">₹300 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="lemon-qty">Quantity (kg):</label>
                         <input type="number" id="lemon-qty" name="lemon-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Nimbu Achar (Lemon Pickle)"
                             data-price-per-kg="300"
                             data-quantity-input-id="lemon-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
             </div>
         </section>
         <section id="non-veg-pickles">
             <h3>Non-Veg Pickles</h3>
             <div class="product-grid">
-                <div class="product">
+                <div class="product" data-product-id="chicken-pickle">
                     <img src="chicken.jpg" alt="Chicken Pickle">
                     <h3>Chicken Pickle</h3>
-                    <p class="price">₹1200 / 1kg</p>
+                    <p class="price" data-base-price="1200">₹1200 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="chicken-qty">Quantity (kg):</label>
                         <input type="number" id="chicken-qty" name="chicken-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Chicken Pickle"
                             data-price-per-kg="1200"
                             data-quantity-input-id="chicken-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
-                <div class="product">
+                <div class="product" data-product-id="prawn-pickle-royyala">
                     <img src="prawn.jpg" alt="Prawn Pickle">
                     <h3>Prawn Pickle (Royyala)</h3>
-                    <p class="price">₹1500 / 1kg</p>
+                    <p class="price" data-base-price="1500">₹1500 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="prawn-qty">Quantity (kg):</label>
                         <input type="number" id="prawn-qty" name="prawn-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Prawn Pickle (Royyala)"
                             data-price-per-kg="1500"
                             data-quantity-input-id="prawn-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
-                <div class="product">
+                <div class="product" data-product-id="mutton-pickle">
                     <img src="mutton.jpg" alt="Mutton Pickle">
                     <h3>Mutton Pickle</h3>
-                    <p class="price">₹1850 / 1kg</p>
+                    <p class="price" data-base-price="1850">₹1850 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="mutton-qty">Quantity (kg):</label>
                         <input type="number" id="mutton-qty" name="mutton-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Mutton Pickle"
                             data-price-per-kg="1850"
                             data-quantity-input-id="mutton-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
-                <div class="product">
+                <div class="product" data-product-id="fish-pickle-chepa-pachadi">
                     <img src="fish.jpg" alt="Fish Pickle">
                     <h3>Fish Pickle (Chepa Pachadi)</h3>
-                    <p class="price">₹1200 / 1kg</p>
+                    <p class="price" data-base-price="1200">₹1200 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="fish-qty">Quantity (kg):</label>
                         <input type="number" id="fish-qty" name="fish-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Fish Pickle (Chepa Pachadi)"
                             data-price-per-kg="1200"
                             data-quantity-input-id="fish-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
-                <div class="product">
+                <div class="product" data-product-id="gongura-chicken-pickle">
                     <img src="gongura-chicken.jpg" alt="Gongura Chicken Pickle">
                     <h3>Gongura Chicken Pickle</h3>
-                    <p class="price">₹1500 / 1kg</p>
+                    <p class="price" data-base-price="1500">₹1500 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="gongura-chicken-qty">Quantity (kg):</label>
                         <input type="number" id="gongura-chicken-qty" name="gongura-chicken-qty" min="1" max="10" value="1">
                     </div>
-                    <button class="btn order-btn"
+                    <button class="btn add-to-cart-btn"
                             data-product-name="Gongura Chicken Pickle"
                             data-price-per-kg="1500"
                             data-quantity-input-id="gongura-chicken-qty"
                             data-state="initial"
-                            onclick="handleOrderClick(this)">Order Now</button>
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
                 </div>
             </div>
         </section>
@@ -724,72 +994,256 @@
         </footer>
     </div> <!-- End of main-content-wrapper -->
 
+    <!-- Overlay for modals -->
+    <div class="overlay" id="overlay"></div>
+
     <!-- Custom Message Box HTML -->
     <div id="custom-message-box"></div>
 
-    <script>
-        let activeOrderButton = null; // To keep track of the currently active order button
+    <!-- Cart Modal HTML -->
+    <div id="cart-modal">
+        <h2>Your Cart</h2>
+        <div id="cart-items-container">
+            <!-- Cart items will be dynamically loaded here -->
+            <p id="empty-cart-message" style="text-align: center; color: #777;">Your cart is empty.</p>
+        </div>
+        <div id="cart-total">Total: ₹0</div>
+        <div class="cart-actions">
+            <button class="btn" onclick="closeCartModal()">Continue Shopping</button>
+            <button class="btn" onclick="checkoutCart()">Checkout via WhatsApp</button>
+        </div>
+    </div>
 
-        // Function to toggle the sidebar
+    <script>
+        let activeAddToCartButton = null; // To keep track of the currently active "Add to Cart" button
+        let cartItems = []; // Array to store cart items
+
+        // --- Utility Functions ---
+        function showCustomMessage(message) {
+            const messageBox = document.getElementById('custom-message-box');
+            const overlay = document.getElementById('overlay');
+            messageBox.innerHTML = `
+                <p>${message}</p>
+                <button onclick="hideCustomMessage()">OK</button>
+            `;
+            messageBox.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        function hideCustomMessage() {
+            document.getElementById('custom-message-box').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // --- Sidebar Functions ---
         function toggleSidebar() {
             document.body.classList.toggle('sidebar-open');
         }
 
-        // Function to close the sidebar (e.g., when a link is clicked)
         function closeSidebar() {
             document.body.classList.remove('sidebar-open');
         }
 
-        // Close sidebar if user clicks outside of it (on larger screens)
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('mySidebar');
             const toggleBtn = document.querySelector('.sidebar-toggle');
             const isClickInsideSidebar = sidebar.contains(event.target);
             const isClickOnToggle = toggleBtn.contains(event.target);
 
-            // Only close if sidebar is open, and click is not inside sidebar or on toggle button
-            // This condition ensures it only applies to non-overlay behavior (larger screens)
             if (document.body.classList.contains('sidebar-open') && !isClickInsideSidebar && !isClickOnToggle) {
-                if (window.innerWidth > 480) { // Only close on outside click if not in overlay mode
+                if (window.innerWidth > 480) {
                     closeSidebar();
                 }
             }
         });
 
-        // Optional: Close sidebar if window is resized from small to large while sidebar is open
-        // This prevents the sidebar from being stuck open if resized from overlay mode.
         window.addEventListener('resize', function() {
             if (window.innerWidth > 480 && document.body.classList.contains('sidebar-open')) {
-                // If it's a larger screen and sidebar is open (potentially from mobile overlay), close it
-                // This ensures correct behavior when transitioning from mobile to desktop view
                 closeSidebar();
             }
         });
 
-        // Function to handle the two-step order process
-        function handleOrderClick(button) {
+        // --- Search Bar Function ---
+        function filterProducts() {
+            const searchInput = document.getElementById('product-search').value.toLowerCase();
+            const products = document.querySelectorAll('.product');
+            let foundResults = 0;
+            const noResultsMessage = document.getElementById('no-results-message');
+
+            products.forEach(product => {
+                const productName = product.querySelector('h3').textContent.toLowerCase();
+                const productPrice = product.querySelector('.price').textContent.toLowerCase();
+                const productText = productName + " " + productPrice;
+
+                if (productText.includes(searchInput)) {
+                    product.style.display = 'flex'; // Show the product
+                    foundResults++;
+                } else {
+                    product.style.display = 'none'; // Hide the product
+                }
+            });
+
+            // Show/hide "No results found" message
+            if (foundResults === 0 && searchInput.length > 0) {
+                noResultsMessage.style.display = 'block';
+            } else {
+                noResultsMessage.style.display = 'none';
+            }
+        }
+
+        // --- Shopping Cart Functions ---
+
+        // Load cart items from local storage on page load
+        function loadCart() {
+            const storedCart = localStorage.getItem('pickleParadiseCart');
+            if (storedCart) {
+                cartItems = JSON.parse(storedCart);
+            }
+            updateCartItemCount();
+        }
+
+        // Save cart items to local storage
+        function saveCart() {
+            localStorage.setItem('pickleParadiseCart', JSON.stringify(cartItems));
+            updateCartItemCount();
+        }
+
+        // Update the number shown on the cart icon
+        function updateCartItemCount() {
+            const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-item-count').textContent = totalItems;
+        }
+
+        // Open the cart modal
+        function openCartModal() {
+            document.getElementById('cart-modal').style.display = 'flex';
+            document.getElementById('overlay').style.display = 'block';
+            renderCartItems(); // Re-render cart content each time it's opened
+        }
+
+        // Close the cart modal
+        function closeCartModal() {
+            document.getElementById('cart-modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Render (or re-render) items in the cart modal
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            const totalElement = document.getElementById('cart-total');
+            container.innerHTML = ''; // Clear previous items
+
+            if (cartItems.length === 0) {
+                container.innerHTML = '<p id="empty-cart-message" style="text-align: center; color: #777;">Your cart is empty.</p>';
+                totalElement.textContent = 'Total: ₹0';
+                return;
+            }
+
+            // Hide empty cart message if items exist
+            const emptyMessage = document.getElementById('empty-cart-message');
+            if (emptyMessage) emptyMessage.style.display = 'none';
+
+            let grandTotal = 0;
+
+            cartItems.forEach(item => {
+                const itemTotal = item.quantity * item.pricePerKg;
+                grandTotal += itemTotal;
+
+                const cartItemDiv = document.createElement('div');
+                cartItemDiv.classList.add('cart-item');
+                cartItemDiv.innerHTML = `
+                    <div class="cart-item-info">
+                        <h4>${item.productName}</h4>
+                        <p>₹${item.pricePerKg} / 1kg</p>
+                    </div>
+                    <div class="cart-item-qty">
+                        <button class="cart-item-qty-btn" onclick="updateCartQuantity('${item.productId}', ${item.quantity - 1})">-</button>
+                        <input type="number" value="${item.quantity}" min="1" max="10"
+                               onchange="updateCartQuantity('${item.productId}', this.value)">
+                        <button class="cart-item-qty-btn" onclick="updateCartQuantity('${item.productId}', ${item.quantity + 1})">+</button>
+                    </div>
+                    <span class="cart-item-price">₹${itemTotal}</span>
+                    <button class="remove-item-btn" onclick="removeFromCart('${item.productId}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                container.appendChild(cartItemDiv);
+            });
+
+            totalElement.textContent = `Total: ₹${grandTotal}`;
+        }
+
+        // Add or update item in cart
+        function addItemToCart(productId, productName, pricePerKg, quantity) {
+            let existingItem = cartItems.find(item => item.productId === productId);
+
+            if (existingItem) {
+                existingItem.quantity = quantity; // Update existing quantity
+            } else {
+                cartItems.push({ productId, productName, pricePerKg, quantity });
+            }
+            saveCart();
+        }
+
+        // Update quantity from cart modal
+        function updateCartQuantity(productId, newQuantity) {
+            let quantity = parseInt(newQuantity);
+            const itemIndex = cartItems.findIndex(item => item.productId === productId);
+
+            if (itemIndex > -1) {
+                // Handle deletion if quantity drops to 0 or less
+                if (quantity <= 0) {
+                    removeFromCart(productId);
+                    return;
+                }
+
+                if (isNaN(quantity) || quantity < 1 || quantity > 10) {
+                    showCustomMessage(`Quantity for ${cartItems[itemIndex].productName} must be between 1kg and 10kg.`);
+                    // Revert input value if invalid
+                    const inputElement = document.querySelector(`#cart-items-container input[onchange*="${productId}"]`);
+                    if (inputElement) {
+                       inputElement.value = cartItems[itemIndex].quantity;
+                    }
+                    return;
+                }
+                cartItems[itemIndex].quantity = quantity;
+                saveCart();
+                renderCartItems(); // Re-render to reflect changes
+            }
+        }
+
+        // Remove item from cart
+        function removeFromCart(productId) {
+            cartItems = cartItems.filter(item => item.productId !== productId);
+            saveCart();
+            renderCartItems(); // Re-render cart items
+        }
+
+        // Handle the two-step process for "Add to Cart" button
+        function handleAddToCartClick(button) {
+            const productId = button.closest('.product').dataset.productId;
             const productName = button.dataset.productName;
             const pricePerKg = parseFloat(button.dataset.pricePerKg);
             const quantityInputId = button.dataset.quantityInputId;
             const quantitySelector = document.getElementById(quantityInputId).closest('.quantity-selector');
             const quantityInput = document.getElementById(quantityInputId);
 
-            // If a different product's quantity selector is active, revert it
-            if (activeOrderButton && activeOrderButton !== button) {
-                const prevQuantitySelector = document.getElementById(activeOrderButton.dataset.quantityInputId).closest('.quantity-selector');
+            // Revert previously active button if any
+            if (activeAddToCartButton && activeAddToCartButton !== button) {
+                const prevQuantitySelector = document.getElementById(activeAddToCartButton.dataset.quantityInputId).closest('.quantity-selector');
                 prevQuantitySelector.classList.remove('show');
-                activeOrderButton.textContent = 'Order Now';
-                activeOrderButton.dataset.state = 'initial';
+                activeAddToCartButton.textContent = 'Add to Cart';
+                activeAddToCartButton.dataset.state = 'initial';
             }
 
             if (button.dataset.state === 'initial') {
                 // First click: Show quantity selector
                 quantitySelector.classList.add('show');
-                button.textContent = 'Confirm Order';
-                button.dataset.state = 'confirm';
-                activeOrderButton = button; // Set this button as the active one
+                button.textContent = 'Add to Cart'; // Keep text "Add to Cart" but this implies action to add
+                button.dataset.state = 'confirm'; // Change state to allow next click to add
+                activeAddToCartButton = button; // Set this button as the active one
             } else {
-                // Second click: Confirm order
+                // Second click: Confirm add to cart
                 let quantity = parseInt(quantityInput.value);
 
                 if (isNaN(quantity) || quantity < 1 || quantity > 10) {
@@ -797,36 +1251,48 @@
                     return; // Stop execution if validation fails
                 }
 
-                const totalAmount = quantity * pricePerKg;
-                const message = `I'm interested in ordering ${quantity}kg of ${productName}. The total estimated price is ₹${totalAmount}.`;
-                const whatsappUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
+                addItemToCart(productId, productName, pricePerKg, quantity);
+                showCustomMessage(`${quantity}kg of ${productName} added to cart!`);
 
-                // Reset button and hide quantity selector after successful order
+                // Reset button and hide quantity selector after successful add
                 quantitySelector.classList.remove('show');
-                button.textContent = 'Order Now';
-                button.dataset.state = 'initial';
-                activeOrderButton = null; // No active button after order
+                button.textContent = 'Add to Cart'; // Revert text
+                button.dataset.state = 'initial'; // Revert state
+                activeAddToCartButton = null; // No active button after add
             }
         }
 
-        // Custom message box implementation (since alert() is disallowed)
-        function showCustomMessage(message) {
-            let messageBox = document.getElementById('custom-message-box');
-            if (!messageBox) {
-                messageBox = document.createElement('div');
-                messageBox.id = 'custom-message-box';
-                document.body.appendChild(messageBox);
+        // Checkout via WhatsApp
+        function checkoutCart() {
+            if (cartItems.length === 0) {
+                showCustomMessage("Your cart is empty. Please add some pickles before checking out.");
+                return;
             }
-            messageBox.innerHTML = `
-                <p>${message}</p>
-                <button onclick="document.getElementById('custom-message-box').style.opacity = '0'; document.getElementById('custom-message-box').style.visibility = 'hidden';">
-                    OK
-                </button>
-            `;
-            messageBox.style.opacity = '1';
-            messageBox.style.visibility = 'visible';
+
+            let whatsappMessage = "Hello Pickle Paradise, I'd like to place an order for the following items:\n\n";
+            let grandTotal = 0;
+
+            cartItems.forEach((item, index) => {
+                const itemTotal = item.quantity * item.pricePerKg;
+                grandTotal += itemTotal;
+                whatsappMessage += `${index + 1}. ${item.productName} - ${item.quantity}kg (₹${item.pricePerKg}/kg) = ₹${itemTotal}\n`;
+            });
+
+            whatsappMessage += `\nGrand Total: ₹${grandTotal}`;
+            whatsappMessage += `\n\nPlease confirm my order and provide payment details.`;
+
+            const whatsappUrl = `https://wa.me/917801035193?text=${encodeURIComponent(whatsappMessage)}`;
+            window.open(whatsappUrl, '_blank');
+
+            // Optionally clear cart after checkout
+            cartItems = [];
+            saveCart();
+            closeCartModal();
+            showCustomMessage("Your order request has been sent via WhatsApp!");
         }
+
+        // Initialize cart on page load
+        document.addEventListener('DOMContentLoaded', loadCart);
     </script>
 </body>
 </html>
