@@ -906,8 +906,8 @@
             <h3>Non-Veg Pickles</h3>
             <div class="product-grid">
                 <div class="product" data-product-id="chicken-pickle">
-                    <img src="chicken.jpg" alt="Chicken Pickle">
-                    <h3>Chicken Pickle</h3>
+                    <img src="chicken.jpg" alt="Bone Chicken Pickle">
+                    <h3>Bone Chicken Pickle</h3>
                     <p class="price" data-base-price="1200">₹1200 / 1kg</p>
                     <div class="quantity-selector">
                         <label for="chicken-qty">Quantity (kg):</label>
@@ -916,6 +916,21 @@
                     <button class="btn add-to-cart-btn"
                             data-product-name="Chicken Pickle"
                             data-price-per-kg="1200"
+                            data-quantity-input-id="chicken-qty"
+                            data-state="initial"
+                            onclick="handleAddToCartClick(this)">Add to Cart</button>
+                </div>
+                <div class="product" data-product-id="chicken-pickle">
+                    <img src="boneless.jpg" alt="Boneless Chicken Pickle">
+                    <h3>Boneless Chicken Pickle</h3>
+                    <p class="price" data-base-price="1700">₹1700 / 1kg</p>
+                    <div class="quantity-selector">
+                        <label for="chicken-qty">Quantity (kg):</label>
+                        <input type="number" id="chicken-qty" name="chicken-qty" min="1" max="10" value="1">
+                    </div>
+                    <button class="btn add-to-cart-btn"
+                            data-product-name="Chicken Pickle"
+                            data-price-per-kg="1700"
                             data-quantity-input-id="chicken-qty"
                             data-state="initial"
                             onclick="handleAddToCartClick(this)">Add to Cart</button>
